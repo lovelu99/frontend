@@ -50,8 +50,8 @@ pipeline {
             steps {
                 build job: 'config-repo',
                 parameters: [
-                    string(name: 'IMAGE_NAME', value:${IMAGE_NAME}),
-                    string(name: 'IMAGE_TAG', value:${IMAGE_TAG})
+                    string(name: 'IMAGE_NAME', value: "${IMAGE_NAME}"),
+                    string(name: 'IMAGE_TAG', value: "${IMAGE_TAG}")
                     
                 ]
             }
