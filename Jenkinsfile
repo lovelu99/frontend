@@ -21,18 +21,49 @@ pipeline {
             }
         }
         stage  ('Container Security Scan'){
-            steps{
-                sh """
-                echo ' Security scan'
-                """
+            steps {
+                script {
+                    sh 'echo "Running Trivy scan on the Docker image"'
+                    sh 'mkdir -p reports'
+                    def trivyStatus = sh (
+                    script: """
+                    trivy image ${IMAGE_NAME}:${IMAGE_TAG} \
+                    --severity HIGH,CRITICAL \
+                    --exit-code 1 \
+                    --ignore-unfixed \
+                    --format table \
+                    --output reports/trivy-report.txt \
+                    --no-progress
+                    """,
+                    returnStatus: true
+                    )
+                    // archive report regardless of scan result
+                    archiveArtifacts artifacts: 'reports/*', fingerprint: true, allowEmptyArchive: true
+
+                    // fail pipeline if vulnerabilities detected
+                    if (trivyStatus != 0) {
+                        error("Trivy detected HIGH/CRITICAL vulnerabilities. See the report in Jenkins artifacts.")
+                    }
+                }
             }
         }
         stage ('Code Quality Scan') {
-            steps{
-                sh """
-                echo 'Code quality scan'                    
-                """
-
+            steps {
+                script {
+                    def scannerHome = tool 'sonarscanner'
+                    withSonarQubeEnv('sonarqube') {                   
+                    sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=todo-frontend \
+                        -Dsonar.projectName=todo-frontend \
+                        -Dsonar.sources=. \
+                        -Dsonar.token=${env.SONAR_AUTH_TOKEN}
+                    """
+                    }
+                    timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                    }
+                }                
             }
         }
         stage ('Push Docker Image') {
