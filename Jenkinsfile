@@ -60,7 +60,7 @@ pipeline {
             steps {
                 script{
                     sh """
-                    dodocker rmi ${IMAGE_NAME}:${IMAGE_TAG}
+                    docker rmi ${IMAGE_NAME}:${IMAGE_TAG}
                     """
                     cleanWs()
                 }
