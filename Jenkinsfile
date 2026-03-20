@@ -30,7 +30,7 @@ pipeline {
         stage ('Code Quality Scan') {
             steps{
                 sh """
-                echo " 'Code quality scan'                    
+                echo 'Code quality scan'                    
                 """
 
             }
