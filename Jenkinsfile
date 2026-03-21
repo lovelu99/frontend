@@ -28,6 +28,7 @@ pipeline {
                     def trivyStatus = sh (
                     script: """
                     trivy image ${IMAGE_NAME}:${IMAGE_TAG} \
+                    --scanners vuln \
                     --severity HIGH,CRITICAL \
                     --exit-code 1 \
                     --ignore-unfixed \

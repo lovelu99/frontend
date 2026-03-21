@@ -8,8 +8,11 @@ COPY . .
 RUN npm run build
 
 # ---------- Stage 2: serve ----------
-FROM nginx:alpine
-RUN apk update && apk upgrade --no-cache
+# FROM nginx:alpine
+# RUN apk update && apk upgrade --no-cache
+
+FROM nginx:1.23-alpine
+#only to pipeline fail
 
 # Copy React build output
 COPY --from=builder /app/dist /usr/share/nginx/html
