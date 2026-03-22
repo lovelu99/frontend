@@ -32,8 +32,8 @@ pipeline {
                     --severity HIGH,CRITICAL \
                     --exit-code 1 \
                     --ignore-unfixed \
-                    --format table \
-                    --output reports/trivy-report.txt \
+                    --format json \
+                    --output reports/trivy-report.json \
                     --no-progress
                     """,
                     returnStatus: true
