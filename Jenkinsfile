@@ -47,6 +47,30 @@ pipeline {
                     }
                 }
             }
+            post {
+                failure {
+                    emailext(
+                        subject: "Trivy Scan Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                        mimeType: 'text/html',
+                        body: """
+                        <html>
+                        <body>
+                            <h2>Container Security Scan Failed</h2>
+                            <p><b>Job Name:</b> ${env.JOB_NAME}</p>
+                            <p><b>Build Number:</b> ${env.BUILD_NUMBER}</p>
+                            <p><b>Stage:</b> Container Security Scan</p>
+                            <p><b>Docker Image:</b> ${IMAGE_NAME}:${IMAGE_TAG}</p>
+                            <p><b>Build URL:</b> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                            <p>Trivy detected <b>HIGH/CRITICAL</b> vulnerabilities in the container image.</p>
+                            <p>Please review the Jenkins console output and attached Trivy report.</p>
+                        </body>
+                        </html>
+                        """,
+                        to: 'relibot107@onbap.com',
+                        attachmentsPattern: 'reports/trivy-report.json'
+                    )
+                }
+        }
         }
         // stage ('Code Quality Scan') {
         //     steps {
