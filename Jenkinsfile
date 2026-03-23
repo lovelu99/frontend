@@ -70,7 +70,7 @@ pipeline {
                         attachmentsPattern: 'reports/trivy-report.json'
                     )
                 }
-        }
+            }
         }
         stage ('Code Quality Scan') {
             steps {
@@ -89,6 +89,29 @@ pipeline {
                     waitForQualityGate abortPipeline: true
                     }
                 }                
+            }
+            post {
+                failure {
+                    emailext(
+                        subject: "SonarQube Quality Gate Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                        mimeType: 'text/html',
+                        body: """
+                        <html>
+                        <body>
+                            <h2>SonarQube Quality Gate Failed</h2>
+                            <p><b>Job Name:</b> ${env.JOB_NAME}</p>
+                            <p><b>Build Number:</b> ${env.BUILD_NUMBER}</p>
+                            <p><b>Stage:</b> Quality Gate</p>
+                            <p><b>Project:</b> ${env.JOB_NAME}</p>
+                            <p><b>Build URL:</b> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                            <p>The SonarQube quality gate did not pass.</p>
+                            <p>Please review code issues, bugs, vulnerabilities, code smells, coverage, and duplication in SonarQube before proceeding.</p>
+                        </body>
+                        </html>
+                        """,
+                        to: 'relibot107@onbap.com'
+                    )
+                }
             }
         }
         stage ('Push Docker Image') {
