@@ -72,25 +72,25 @@ pipeline {
                 }
         }
         }
-        // stage ('Code Quality Scan') {
-        //     steps {
-        //         script {
-        //             def scannerHome = tool 'sonarscanner'
-        //             withSonarQubeEnv('sonarqube') {                   
-        //             sh """
-        //                 ${scannerHome}/bin/sonar-scanner \
-        //                 -Dsonar.projectKey=todo-frontend \
-        //                 -Dsonar.projectName=todo-frontend \
-        //                 -Dsonar.sources=. \
-        //                 -Dsonar.token=${env.SONAR_AUTH_TOKEN}
-        //             """
-        //             }
-        //             timeout(time: 10, unit: 'MINUTES') {
-        //             waitForQualityGate abortPipeline: true
-        //             }
-        //         }                
-        //     }
-        // }
+        stage ('Code Quality Scan') {
+            steps {
+                script {
+                    def scannerHome = tool 'sonarscanner'
+                    withSonarQubeEnv('sonarqube') {                   
+                    sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=todo-frontend \
+                        -Dsonar.projectName=todo-frontend \
+                        -Dsonar.sources=. \
+                        -Dsonar.token=${env.SONAR_AUTH_TOKEN}
+                    """
+                    }
+                    timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                    }
+                }                
+            }
+        }
         stage ('Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
