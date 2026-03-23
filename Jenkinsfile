@@ -33,7 +33,7 @@ pipeline {
                     --exit-code 1 \
                     --ignore-unfixed \
                     --format json \
-                    --output reports/trivy-report.json \
+                    --output reports/trivy-frontend-report.json \
                     --no-progress
                     """,
                     returnStatus: true
@@ -67,7 +67,7 @@ pipeline {
                         </html>
                         """,
                         to: 'relibot107@onbap.com',
-                        attachmentsPattern: 'reports/trivy-report.json'
+                        attachmentsPattern: 'reports/trivy-frontend-report.json'
                     )
                 }
             }
