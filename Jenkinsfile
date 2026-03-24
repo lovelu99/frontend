@@ -66,7 +66,7 @@ pipeline {
                         </body>
                         </html>
                         """,
-                        to: 'relibot107@onbap.com',
+                        to: 'diyob58782@fabaos.com',
                         attachmentsPattern: 'reports/trivy-frontend-report.json'
                     )
                 }
@@ -109,7 +109,7 @@ pipeline {
                         </body>
                         </html>
                         """,
-                        to: 'relibot107@onbap.com'
+                        to: 'diyob58782@fabaos.com'
                     )
                 }
             }
@@ -163,7 +163,7 @@ pipeline {
                 </body>
                 </html>
                 """,
-                to: 'relibot107@onbap.com'
+                to: 'diyob58782@fabaos.com'
             )
         }
     }
